@@ -1,0 +1,40 @@
+body {
+    background-color: rgb(233, 230, 230);
+}
+input, textarea {
+    width: 70%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  
+  button {
+    width: 50%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    background-color: #45a049;
+  }
+  
+  div {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    border-radius: 5px;
+    padding: 20px;
+  }
+
+  #uploadForm {
+    text-align: center;
+    width: 100%;
+  }

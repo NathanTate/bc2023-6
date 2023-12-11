@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="./styles/details.css">
+    <title>Device Details</title>
+</head>
+<body>
+    <h1 class = "title" >Device Details</h1>
+    <div id="device-details"></div>
+
+    <script>
+        const deviceId = window.location.href.split('/')[3];
+        console.log(deviceId)
+        fetch(`/devices/${deviceId}`, {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(device => {
+          
+
+            const deviceDiv = document.createElement('div');
+            deviceDiv.classList.add('device');
+
+            const textDiv = document.createElement('div');
+            textDiv.classList.add('text');
+
+            const editForm = document.createElement('form');
+            editForm.classList.add('form')
+
+            const h1 = document.createElement('h1');
+            h1.textContent = `Device id: ${device.id}`;
+
+            const h2 = document.createElement('h2');
+            h2.textContent = 'Note: if field is emtpy the value will be set to the current one'
+
+            const nameLabel = document.createElement('label')
+            nameLabel.textContent = 'Name:'
+            const nameInput = document.createElement('input');
+            nameInput.name = 'name';
+            nameInput.value = device.name;
+
+            const descriptionLabel = document.createElement('label')
+            descriptionLabel.textContent = 'Desctiption:'
+            const descriptionInput = document.createElement('textarea');
+            descriptionInput.name = 'description';
+            descriptionInput.value = device.description;
+
+            const serial_numberLabel = document.createElement('label')
+            serial_numberLabel.textContent = 'Serial Number:'
+            const serial_numberInput = document.createElement('input');
+            serial_numberInput.name = 'serial_number';
+            serial_numberInput.value = device.serial_number;
+
+            const manufacturerLabel = document.createElement('label')
+            manufacturerLabel.textContent = 'Manufacturer:'
+            const manufacturerInput = document.createElement('input');
+            manufacturerInput.name = 'manufacturer';
+            manufacturerInput.value = device.manufacturer;
+
+            const imageInput = document.createElement('input');
+            imageInput.type = 'file'; imageInput.name = 'image';
+
+            const image = document.createElement('img');
+            image.src = `/${device.image_url}`;
+            image.alt = 'Device Image';
+
+            const editButton = document.createElement('button');
+            editButton.textContent = 'Edit'
+            editButton.classList.add("button")
+
+            const returnButton = document.createElement('button');
+            returnButton.textContent = 'Go back'
+            returnButton.classList.add("button")
+
+            const deleteDevice = document.createElement('i');
+            deleteDevice.classList.add("fa", "fa-trash", "fa-5x");
+
+            textDiv.appendChild(h1);
+            textDiv.appendChild(h2);
+            editForm.appendChild(nameLabel);
+            editForm.appendChild(nameInput);
+            editForm.appendChild(descriptionLabel);
+            editForm.appendChild(descriptionInput);
+            editForm.appendChild(serial_numberLabel);
+            editForm.appendChild(serial_numberInput);
+            editForm.appendChild(manufacturerLabel);
+            editForm.appendChild(manufacturerInput);
+            editForm.appendChild(imageInput);
+            editForm.appendChild(editButton); 
+            textDiv.appendChild(editForm);
+            textDiv.appendChild(returnButton);
+            textDiv.appendChild(deleteDevice);
+
+
+            deviceDiv.appendChild(textDiv);
+            deviceDiv.appendChild(image);
+
+            //container.appendChild(deviceDiv);
+
+            const deviceDetails = document.getElementById('device-details')
+            deviceDetails.appendChild(deviceDiv);
+
+            let isImageChanged = false;
+
+            editButton.addEventListener('click', async (event) => {
+                event.preventDefault();
+
+                const formData = new FormData();
+                formData.append('name', nameInput.value);
+                formData.append('description', descriptionInput.value);
+                formData.append('serial_number', serial_numberInput.value);
+                formData.append('manufacturer', manufacturerInput.value);
+                formData.append('image', imageInput.files[0]);
+                console.log('black');
+
+                const response = await fetch(`devices/${device.id}`, {
+                    method: 'PUT',
+                    body: formData
+                })
+                if(response.ok) {
+                    if(isImageChanged) {
+                        location.reload();
+                    }
+                    alert(`${device.name} is updated successfully`);
+                }
+                else
+                {
+                    alert(`Problems updating device ${await response.text()}`)
+                }
+            })
+
+            imageInput.addEventListener('change', () => {
+                isImageChanged = true;
+            });
+
+            returnButton.addEventListener('click', () => {
+                location.href = '/';
+            })
+
+            deleteDevice.addEventListener('click', () => {
+                fetch(`/devices/${device.id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if(response.ok) {
+                        deviceDiv.remove();
+                        window.location.href = '/';
+                    } else {
+                        console.log('Failde to delete device')
+                    }
+                })
+            })
+        });
+    </script>
+</body>
+</html>

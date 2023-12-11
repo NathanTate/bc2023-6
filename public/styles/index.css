@@ -1,3 +1,56 @@
 body {
-    background-color: black;
+  font-family: 'Times New Roman', Times, serif;
+  margin: 20px;
 }
+  
+h1 {
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+}
+
+.device {
+  display: flex;
+  border: 1px solid gray;
+  width: 100%;
+  border-radius: 10px;
+  max-width: 800px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+  
+.device h2 {
+  color: black;
+ }
+  
+.text {
+  flex-grow: 1;
+  padding-right: 20px;
+}
+  
+img {
+  height: 190px;
+}
+  
+.add-i {
+  position: absolute;
+  left: 92%;
+  top: 2%
+}
+
+.fa-trash {
+  position: absolute;
+}
+
+.detailsBtn {
+  color: rgb(2, 0, 128);
+  width: 15%;
+  min-width: 80px;
+  height: 15%;
+  max-height: 25px;
+  margin-right: 25px;
+}
+  

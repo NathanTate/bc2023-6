@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles/upload.css">
+</head>
+<body>
+    <div>
+    <form id ="uploadForm" enctype="multipart/form-data">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name" placeholder="Name" required ><br>
+
+        <label for="description">Description:</label><br>
+        <textarea id="description" name="description" placeholder="Description" required></textarea><br>
+
+        <label for="serial_number">Serial Number:</label><br>
+        <input type="text" id="serial_number" name="serial_number" placeholder="Serial Number" required><br>
+
+        <label for="manufacturer">Manufacturer:</label><br>
+        <input type="text" id="manufacturer" name="manufacturer" placeholder="Manufacturer" required><br>
+
+        <label for="image">Image:</label><br>
+        <input type="file" id="image" name="image" accept="image" required><br>
+
+        <button type="submit">Submit</button>
+    </form>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const serial_number = document.getElementById('serial_number').value;
+            const manufacturer = document.getElementById('manufacturer').value;
+            const imageInput = document.getElementById('image');
+            const image = imageInput.files[0];
+
+            const formData = new FormData();
+            formData.append('name', name);
+            formData.append('description', description);
+            formData.append('serial_number', serial_number);
+            formData.append('manufacturer', manufacturer);
+            formData.append('image', image);
+            try {
+                const response = await fetch('/devices/upload', {
+                    method: 'POST',
+                    body: formData       
+                });
+                if(response.ok) {
+                    alert('Item added successfully');
+                    window.location.href = '/';
+                } else {
+                    alert(`Problem during upload: ${await response.text()}`);
+                }
+            } catch (err) {
+                console.error(err)
+            }
+        })
+    </script>
+</body>
+</html>

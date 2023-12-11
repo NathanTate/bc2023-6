@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs')
 
 const app = express();
 const port = 8000;
@@ -15,7 +14,13 @@ app.listen(port, () =>{
     console.log('Server is running on port:' + port);
 });
 
-app.get("/", (req, res) => {
-    
+app.get("/UploadForm", (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'UploadForm.html'));
 });
+
+app.get("/:id", (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'details.html'));
+});
+
+
 

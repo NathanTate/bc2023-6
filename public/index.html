@@ -3,11 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Project 6</title>
-    <link rel="stylesheet" type="text/css" href="./styles/index.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/styles/index.css">
+    <title>List of Devices</title>
 </head>
-
 <body>
+    <a href="/UploadForm"><i class="add-i fa fa-add fa-3x"></i></a>
+    <h1>List of Devices</h1>
+    <div id="devices-container"></div>
     
+    <script>
+      fetch('/devices', {
+        method: 'GET',
+        headers: {
+            'Content-type': 'application/json'
+        }
+      })
+      .then(response => response.json())
+      .then(response => {
+        response.forEach(device => {
+            const deviceLink = document.createElement('a');
+            deviceLink.href = `/${device.id}`;
+
+            const container = document.createElement('div');
+            container.classList.add('container');
+
+            const deviceDiv = document.createElement('div');
+            deviceDiv.classList.add('device');
+
+            const textDiv = document.createElement('div');
+            textDiv.classList.add('text');
+
+            const h2 = document.createElement('h2');
+            h2.textContent = device.name;
+
+            const descriptionP = document.createElement('p');
+            descriptionP.textContent = device.description;
+
+            const serialNumberP = document.createElement('p');
+            serialNumberP.textContent = `Serial Number: ${device.serial_number}`;
+
+            const manufacturerP = document.createElement('p');
+            manufacturerP.textContent = `Manufacturer: ${device.manufacturer}`;
+
+            const detailsButtton = document.createElement('button');
+            detailsButtton.textContent = 'Details'
+            detailsButtton.classList.add('detailsBtn')
+
+            const image = document.createElement('img');
+            image.src = `/${device.image_url}`;
+            image.alt = 'Device Image';
+
+            const deleteDevice = document.createElement('i');
+            deleteDevice.classList.add("fa", "fa-trash")
+            deviceLink.appendChild(detailsButtton);
+
+            textDiv.appendChild(h2);
+            textDiv.appendChild(descriptionP);
+            textDiv.appendChild(serialNumberP);
+            textDiv.appendChild(manufacturerP);
+            textDiv.appendChild(deviceLink);
+            textDiv.appendChild(deleteDevice);
+
+
+            deviceDiv.appendChild(textDiv);
+            deviceDiv.appendChild(image);
+
+            container.appendChild(deviceDiv);
+
+            const devicesContainer = document.getElementById('devices-container')
+            devicesContainer.appendChild(container);
+
+            deleteDevice.addEventListener('click', () => {
+                //const deviceId = device.id;
+
+                fetch(`/devices/${device.id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if(response.ok) {
+                        container.remove();
+                    } else {
+                        console.log('Failde to delete device')
+                    }
+                })
+            })
+        });
+      })
+    </script>
 </body>
 </html>

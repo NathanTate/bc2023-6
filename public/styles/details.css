@@ -1,0 +1,71 @@
+body {
+  font-family: 'Times New Roman', Times, serif;
+  margin: 20px;
+}
+  
+.title {
+  text-align: center;
+}
+
+.device {
+  display: flex;
+  margin: auto;
+  background-color: #4CAF50;
+  border: solid 1px black;
+  border-radius: 10px;
+  max-width: 1500px;
+}
+  
+.fa-trash {
+  position: absolute;
+  top: 67%;
+  right: 82%;
+}
+  
+img {
+  height: 600px;
+  max-width: 900px;
+  padding: 15px;
+  border-radius: 30px;
+}
+
+input, textarea {
+  width: 90%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+label {
+  display: block;
+  width: 100%;
+}
+
+button {
+  width: 30%;
+  background-color: #06a0cf;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #2e9aad;
+}
+
+.text {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.device-details {
+  width: 100%;
+  text-align: center;
+  background-color: green;
+}
