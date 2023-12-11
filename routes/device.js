@@ -97,6 +97,11 @@ router.put('/:id', getDevice, upload.single('image'), async (req, res) => {
 
 //Delete device
 router.delete("/:id", getDevice, async (req, res) => {
+   if(res.device.image_url != null) {
+    fs.unlinkSync(path.join(__dirname, '../public' ,res.device.image_url), (err) => {
+      return res.status(500).send({message: err});
+    })
+  }
   try {
   await db.promise().query(`DELETE FROM DEVICES WHERE id = '${res.device.id}'`);
   res.status(200).json({message: `device ${res.device.name} was deleted`});
