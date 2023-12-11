@@ -2,7 +2,7 @@
  * @swagger
  * tags:
  *   name: Devices
- *   description: API operations for managing devices
+ *   description: Testing API operations for our devices app
  */
 
 /**
