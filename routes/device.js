@@ -1,3 +1,32 @@
+/**
+ * @swagger
+ * tags:
+ *   name: Devices
+ *   description: API operations for managing devices
+ */
+
+/**
+ * @swagger
+ * definitions:
+ *   Device:
+ *     type: object
+ *     properties:
+ *       id:
+ *         type: integer
+ *       name:
+ *         type: string
+ *       description:
+ *         type: string
+ *       serial_number:
+ *         type: string
+ *       manufacturer:
+ *         type: string
+ *       is_borrowed:
+ *         type: integer
+ *       image_url:
+ *         type: string
+ */
+
 const express = require('express')
 const router = express.Router();
 const db = require('../database.js');
@@ -16,18 +45,87 @@ const Imagestorage = multer.diskStorage({
 
 const upload = multer({storage: Imagestorage})
 
+/**
+ * @swagger
+ * /devices:
+ *   get:
+ *     summary: Get all devices
+ *     tags: [Devices]
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         schema:
+ *           type: array
+ *           items:
+ *             $ref: '#/definitions/Device'
+ */
 //Get all devices
 router.get('/', async (req, res) => {
   const [result] = await db.promise().query('SELECT * FROM DEVICES');
-  console.log(result)
-  res.status(200).send(result);
+  res.status(200).json(result);
 });
 
+/**
+ * @swagger
+ * /devices/{id}:
+ *   get:
+ *     summary: Get specific device by id
+ *     tags: [Devices]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the device
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Successful response
+ *         schema:
+ *           $ref: '#/definitions/Device'
+ */
 //Get specific device by id
 router.get('/:id', getDevice, async (req, res) => {
-  res.status(200).send(res.device);
+  res.status(200).json(res.device);
 });
 
+/**
+ * @swagger
+ * /devices/upload:
+ *   post:
+ *     summary: Create a device
+ *     tags: [Devices]
+ *     consumes:
+ *       - multipart/form-data
+ *     parameters:
+ *       - name: image
+ *         in: formData
+ *         type: file
+ *         description: The image file for the device
+ *       - name: name
+ *         in: formData
+ *         type: string
+ *         required: true
+ *       - name: description
+ *         in: formData
+ *         type: string
+ *         required: true
+ *       - name: serial_number
+ *         in: formData
+ *         type: string
+ *         required: true
+ *       - name: manufacturer
+ *         in: formData
+ *         type: string
+ *         required: true
+ *     responses:
+ *       201:
+ *         description: Device created successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             msg:
+ *               type: string
+ */
 //Create a device
 router.post('/upload', upload.single("image"), async (req, res) => {
   const {name, description, serial_number, manufacturer} = req.body;
@@ -53,6 +151,46 @@ router.post('/upload', upload.single("image"), async (req, res) => {
   }
 });
 
+/**
+ * @swagger
+ * /devices/{id}:
+ *   put:
+ *     summary: Update a device by ID
+ *     tags: [Devices]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the device to be updated
+ *         required: true
+ *         type: integer
+ *       - name: image
+ *         in: formData
+ *         type: file
+ *         description: The updated image file for the device
+ *       - name: name
+ *         in: formData
+ *         type: string
+ *         description: The updated name of the device
+ *       - name: description
+ *         in: formData
+ *         type: string
+ *         description: The updated description of the device
+ *       - name: serial_number
+ *         in: formData
+ *         type: string
+ *         description: The updated serial number of the device
+ *       - name: manufacturer
+ *         in: formData
+ *         type: string
+ *         description: The updated manufacturer of the device
+ *     responses:
+ *       200:
+ *         description: Device updated successfully
+ *         schema:
+ *           $ref: '#/definitions/Device'
+ *       500:
+ *         description: Internal Server Error
+ */
 //Update a device by id
 router.put('/:id', getDevice, upload.single('image'), async (req, res) => {
   const {name, description, serial_number, manufacturer} = req.body;
@@ -95,6 +233,29 @@ router.put('/:id', getDevice, upload.single('image'), async (req, res) => {
 
 });
 
+/**
+ * @swagger
+ * /devices/{id}:
+ *   delete:
+ *     summary: Delete a device by ID
+ *     tags: [Devices]
+ *     parameters:
+ *       - name: id
+ *         in: path
+ *         description: ID of the device to be deleted
+ *         required: true
+ *         type: integer
+ *     responses:
+ *       200:
+ *         description: Device deleted successfully
+ *         schema:
+ *           type: object
+ *           properties:
+ *             message:
+ *               type: string
+ *       500:
+ *         description: Internal Server Error
+ */
 //Delete device
 router.delete("/:id", getDevice, async (req, res) => {
   try {
